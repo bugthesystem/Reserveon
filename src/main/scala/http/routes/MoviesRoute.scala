@@ -11,8 +11,8 @@ import http.auth.OAuth2RouteProvider
 import io.circe.Decoder.Result
 import io.circe.generic.auto._
 import io.circe.syntax._
-import io.circe.{ Decoder, Encoder, HCursor, Json }
-import models.{ Account, Movie, MovieCreate }
+import io.circe.{Decoder, Encoder, HCursor, Json}
+import models.{Account, MovieCreate}
 import services.MoviesService
 
 import scala.concurrent.ExecutionContext
@@ -41,8 +41,8 @@ class MoviesRoute(override val oauth2DataHandler: OAuth2DataHandler, moviesServi
         post {
           authenticateOAuth2Async[AuthInfo[Account]]("realm", oauth2Authenticator) {
             _ =>
-              entity(as[MovieCreate]) { movieCreate =>
-                onSuccess(createMovie(movieCreate.toMovie())) {
+              entity(as[MovieCreate]) { movieToCreate =>
+                onSuccess(createMovie(movieToCreate.toMovie())) {
                   case Some(movie) => {
                     extractRequestContext { requestContext =>
                       val request = requestContext.request

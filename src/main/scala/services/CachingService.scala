@@ -19,7 +19,7 @@ trait CachingService {
 
   def getFromCache(key: String): Future[Movie]
 
-  //TODO:
+  //TODO: circe marshalling problems
   def addReservationToCache(key: String, obj: ReservationCounter): Future[Boolean]
 
   def getReservationStateFromCache(key: String): Future[Option[ReservationCounter]]
