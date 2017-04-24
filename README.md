@@ -19,7 +19,7 @@ Sample reactive Movie Ticket reservation system
 - OAuth2 support (client_credentials, access_token, refresh_token flows)
 - CORS support
 - Movie & Reservation CRUD
-- Simple reservation mechanism
+- Simple reservation mechanism using Redis
 - Database schema migration
 - Route tests
 
