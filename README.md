@@ -25,7 +25,7 @@ Sample reactive Movie Ticket reservation system
 
 ## Commands
 ### Run
-:warning: _If ypu want to use docker-compose, you can skip manual steps._
+:warning: _If you want to use docker-compose, you can skip manual steps._
 
 #### Setup Postgres Database using Docker
 **Run Postgres container**  
@@ -49,13 +49,13 @@ CREATE DATABASE "reserveon";
 docker run --name redis-reserveon -d -p 6379:6379 redis
 ```
 
-**Environment variables**
-`DB_PG_URL`  - db url by scheme jdbc:postgresql://host:port/db  
-`DB_PG_USER` - db user  
-`DB_PG_PWD`  - db password  
-`DB_CREATE_SAMPLE_DATA`  - enable or disable to create sample data (credential, token etc)  
-`REDIS_HOST`  - redis host  
-`REDIS_PORT`  - redis port  
+**Environment variables**  
+- `DB_PG_URL`  - db url by scheme jdbc:postgresql://host:port/db  
+- `DB_PG_USER` - db user  
+- `DB_PG_PWD`  - db password  
+- `DB_CREATE_SAMPLE_DATA`  - enable or disable to create sample data (credential, token etc)  
+- `REDIS_HOST`  - redis host  
+- `REDIS_PORT`  - redis port  
 
 **_Sample run command_**
 ```sh
