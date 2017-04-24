@@ -8,6 +8,8 @@ Sample reservation system application
  - [Akka Http](https://github.com/akka/akka-http)
  - [Slick](https://github.com/slick/slick)
  - [Flayway](https://github.com/flyway/flyway) (for schema migration)
+ - [Postgres](https://github.com/postgres/postgres)
+ - [Redis](https://github.com/antirez/redis)
  - [ScalaTest](http://www.scalatest.org/)
  - [Specs2](https://github.com/etorreborre/specs2)
  - [Mockito](https://github.com/mockito/mockito)
