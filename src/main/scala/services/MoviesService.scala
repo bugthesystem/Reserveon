@@ -48,7 +48,7 @@ class MoviesServiceImpl(
     } yield {
       Some(created)
     }).recoverWith {
-      //TODO: Better exception handling with meaningful messages (validation etc)
+      //TODO: Better exception handling with meaningful messages
       case _ => Future {
         None
       }

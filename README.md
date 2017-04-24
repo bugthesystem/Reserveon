@@ -16,7 +16,7 @@ Sample reactive Movie Ticket reservation system
  - [Mockito](https://github.com/mockito/mockito)
 
 ## Implemented Features:
-- OAuth2 support (client_credentials, access_token, refresh_token flows)
+- OAuth2 support (client_credentials, password, refresh_token flows)
 - CORS support
 - Movie & Reservation CRUD
 - Simple reservation mechanism using Redis
@@ -25,7 +25,7 @@ Sample reactive Movie Ticket reservation system
 
 ## Commands
 ### Run
-:warning: _If you want to use docker-compose, you can skip manual steps._
+:warning: _If you want to use **`docker-compose`**, you can skip manual steps._
 
 #### Setup Postgres Database using Docker
 **Run Postgres container**  
@@ -97,7 +97,7 @@ sbt coverageReport
  - Produce better error/validation messages from API
  - API Documentation using swagger or similar tool/lib
  - Persist reservation data to DB to use for reports etc later on (currently stored in Redis)
- - Serve data as paged and use cache (implement cache invalidation etc)
+ - Serve data as paged and implement data caching (implement cache invalidation etc)
  - Integration Testing
    1. DB integration tests using [`embedded postgres`](https://github.com/yandex-qatools/postgresql-embedded) or similar tool/lib
    2. Redis integration tests using [`embedded redis`](https://github.com/kstyrc/embedded-redis) or similar tool/lib
