@@ -16,7 +16,7 @@ Sample reactive Movie Ticket reservation system
  - [Mockito](https://github.com/mockito/mockito)
 
 ## Implemented Features:
-- OAuth2 support (client_credentials, access_token, refresh_token flows)
+- OAuth2 support (client_credentials, password, refresh_token flows)
 - CORS support
 - Movie & Reservation CRUD
 - Simple reservation mechanism using Redis
