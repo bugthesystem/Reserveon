@@ -53,6 +53,7 @@ class ReservationServiceImpl(
   }
 
   override def getReservationDetail(imdbId: String, screenId: String): Future[Option[MovieReservationDetail]] = {
+    //INFO: Implement caching to hit to it first
     findMovieByImdbId(imdbId).map {
       case Some(movie) => {
         val key = RESERVATION_TRACK_KEY_TPL.format(imdbId, screenId)
