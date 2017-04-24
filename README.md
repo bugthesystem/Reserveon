@@ -1,7 +1,7 @@
 Reserveon
 =========
 
-Sample reservation system application
+Sample reactive Movie Ticket reservation system
 
 ## Tech stack
  - [Scala](https://www.scala-lang.org/)
