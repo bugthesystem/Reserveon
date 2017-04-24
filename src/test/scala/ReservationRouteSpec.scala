@@ -42,7 +42,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
 
       //INFO:
       // I expected that I can check argument as following but, I could not see solution like this
-      // it[ReservationState].is(rs=> rs.reservedSeats == 1)
+      // it[ReservationCounter].is(rs=> rs.reservedSeats == 1)
 
       val expectedReservationState = ReservationCounter(state.availableSeats, state.reservedSeats + 1)
       cacheService.addToCache[ReservationCounter](cacheKey, expectedReservationState)(encodeReservationCounter) returns Future(true)
