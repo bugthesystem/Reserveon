@@ -25,25 +25,52 @@ Sample reactive Movie Ticket reservation system
 
 ## Commands
 ### Run
-**Environment variables**
+:warning: _If you want to use docker-compose, you can skip manual steps._
 
-`DB_PG_URL`  - db url by scheme jdbc:postgresql://host:port/db
-`DB_PG_USER` - db user
-`DB_PG_PWD`  - db password
-`DB_CREATE_SAMPLE_DATA`  - enable or disable to create sample data (credential, token etc)
+#### Setup Postgres Database using Docker
+**Run Postgres container**  
+```sh
+export DB_PG_PWD=s3cret
+docker run --name pg-reserveon -e POSTGRES_PASSWORD=$DB_PG_PWD -p 65432:5432 -v /var/lib/postgresql/data -d postgres
+```
+**Connect to postgres:**  
+```sh
+docker run -it --link pg-reserveon:postgres --rm postgres \ 
+sh -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
+```
+**Create Database**  
+```sh
+CREATE DATABASE "reserveon";
+```
+
+#### Setup Redis using Docker
+**To Run redis container;**  
+```sh
+docker run --name redis-reserveon -d -p 6379:6379 redis
+```
+
+**Environment variables**  
+- `DB_PG_URL`  - db url by scheme jdbc:postgresql://host:port/db  
+- `DB_PG_USER` - db user  
+- `DB_PG_PWD`  - db password  
+- `DB_CREATE_SAMPLE_DATA`  - enable or disable to create sample data (credential, token etc)  
+- `REDIS_HOST`  - redis host  
+- `REDIS_PORT`  - redis port  
 
 **_Sample run command_**
 ```sh
-DB_PG_URL=jdbc:postgresql://localhost:65432/postgres \
+DB_PG_URL=jdbc:postgresql://localhost:65432/reserveon \
 DB_PG_USER=postgres \
 DB_PG_PWD=s3cret \
 DB_CREATE_SAMPLE_DATA=true \
+REDIS_HOST=localhost \
+REDIS_PORT=6379
 sbt run
 ```
 
 **OR**
 
-Run `docker-compose`, it will start api, redis and postgres and will expose api port to host.
+Run `docker-compose`, it will start `api`, `redis` and `postgres` and will expose api port to host.  
 ```sh
 docker-compose up
 ```
@@ -75,7 +102,6 @@ sbt coverageReport
  - Produce better error/validation messages from API
  - API Documentation using swagger or similar tool/lib
  - Serve data as paged and use cache (implement cache invalidation etc)
- - Implement async data processing queue or similar
  - Integration Testing
    1. DB integration tests using [`embedded postgres`](https://github.com/yandex-qatools/postgresql-embedded) or similar tool/lib
    2. Redis integration tests using [`embedded redis`](https://github.com/kstyrc/embedded-redis) or similar tool/lib
