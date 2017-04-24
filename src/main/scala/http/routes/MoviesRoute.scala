@@ -22,7 +22,7 @@ import scalaoauth2.provider.AuthInfo
 
 class MoviesRoute(override val oauth2DataHandler: OAuth2DataHandler, moviesService: MoviesService)(implicit executionContext: ExecutionContext)
     extends OAuth2RouteProvider[Account]
-    with FailFastCirceSupport with CirceCommonCodecs {
+    with FailFastCirceSupport with CirceCommonCodecs with utils.Messages.Movies {
 
   import moviesService._
 
@@ -48,8 +48,7 @@ class MoviesRoute(override val oauth2DataHandler: OAuth2DataHandler, moviesServi
                     }
                   }
                   case None => {
-                    //TODO: return meaningful response; error detail,validation detail etc..
-                    complete(400)
+                    complete(BadRequest, SOMETHING_WRONG_IN_CLIENT_REQUEST)
                   }
                 }
               }

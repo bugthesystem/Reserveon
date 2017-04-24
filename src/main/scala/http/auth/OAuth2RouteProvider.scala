@@ -12,6 +12,7 @@ import scala.util.{ Failure, Success }
 import scalaoauth2.provider._
 
 trait OAuth2RouteProvider[U] extends Directives with DefaultJsonProtocol {
+
   import OAuth2RouteProvider.tokenResponseFormat
   import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
@@ -46,7 +47,7 @@ trait OAuth2RouteProvider[U] extends Directives with DefaultJsonProtocol {
           onComplete(tokenEndpoint.handleRequest(new AuthorizationRequest(Map(), fields.map(m => m._1 -> Seq(m._2))), oauth2DataHandler)) {
             case Success(maybeGrantResponse) =>
               maybeGrantResponse.fold(
-                oauthError => complete(Unauthorized),
+                _ => complete(Unauthorized),
                 grantResult => complete(tokenResponseFormat.write(grantResultToTokenResponse(grantResult)))
               )
             case Failure(ex) => complete(InternalServerError, s"An error occurred: ${ex.getMessage}")
@@ -59,6 +60,8 @@ trait OAuth2RouteProvider[U] extends Directives with DefaultJsonProtocol {
 }
 
 object OAuth2RouteProvider extends DefaultJsonProtocol {
+
   case class TokenResponse(token_type: String, access_token: String, expires_in: Long, refresh_token: String)
+
   implicit val tokenResponseFormat = jsonFormat4(TokenResponse)
 }

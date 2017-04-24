@@ -1,10 +1,10 @@
 package services
 
 import models.db.MovieEntityTable
-import models.{Movie, ReservationCounter}
+import models.{ Movie, ReservationCounter }
 import utils.CacheConstants
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.postfixOps
 
 trait MoviesService {
@@ -21,10 +21,10 @@ trait MoviesService {
 }
 
 class MoviesServiceImpl(
-                         val databaseService: DatabaseService,
-                         val cacheService: CachingService
-                       )(implicit executionContext: ExecutionContext)
-  extends MovieEntityTable with MoviesService with CacheConstants {
+  val databaseService: DatabaseService,
+  val cacheService: CachingService
+)(implicit executionContext: ExecutionContext)
+    extends MovieEntityTable with MoviesService with CacheConstants {
 
   import cacheService._
   import databaseService._
@@ -42,12 +42,16 @@ class MoviesServiceImpl(
     val key = RESERVATION_TRACK_KEY_TPL.format(movie.imdbId, movie.screenId)
     val reservation = ReservationCounter(availableSeats = movie.availableSeats, reservedSeats = 0)
 
-    for {
-
+    (for {
       created <- db.run(movies returning movies += movie)
       _ <- addToCache[ReservationCounter](key, reservation)(encodeReservationCounter)
     } yield {
-      if (created.id.isEmpty) None else Some(created)
+      Some(created)
+    }).recoverWith {
+      //TODO: Better exception handling with meaningful messages (validation etc)
+      case _ => Future {
+        None
+      }
     }
   }
 
