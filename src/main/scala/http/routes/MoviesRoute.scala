@@ -1,18 +1,14 @@
 package http.routes
 
-import java.sql.Timestamp
-
 import akka.http.scaladsl.model.StatusCodes._
 import akka.http.scaladsl.model.headers.Location
 import akka.http.scaladsl.server.Route
 import de.heikoseeberger.akkahttpcirce.FailFastCirceSupport
 import handlers.OAuth2DataHandler
 import http.auth.OAuth2RouteProvider
-import io.circe.Decoder.Result
 import io.circe.generic.auto._
 import io.circe.syntax._
-import io.circe.{ Decoder, Encoder, HCursor, Json }
-import models.{ Account, MovieCreate }
+import models.{Account, MovieCreate}
 import services.MoviesService
 import utils.CirceCommonCodecs
 
