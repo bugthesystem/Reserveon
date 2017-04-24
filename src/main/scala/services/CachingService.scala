@@ -2,27 +2,22 @@ package services
 
 import java.sql.Timestamp
 
-import redis.RedisClient
 import akka.actor.ActorSystem
 import io.circe.Decoder.Result
-import models.{ Movie, ReservationCounter }
 import io.circe._
 import io.circe.generic.auto._
 import io.circe.parser._
 import io.circe.syntax._
+import redis.RedisClient
+import utils.CirceCommonCodecs
 
 import scala.concurrent.{ ExecutionContext, Future }
 
 trait CachingService {
 
-  def addToCache(key: String, obj: Movie): Future[Boolean]
+  def addToCache[T](key: String, obj: T)(implicit encoder: Encoder[T]): Future[Boolean]
 
-  def getFromCache(key: String): Future[Movie]
-
-  //TODO: circe marshalling problems
-  def addReservationToCache(key: String, obj: ReservationCounter): Future[Boolean]
-
-  def getReservationStateFromCache(key: String): Future[Option[ReservationCounter]]
+  def getFromCache[T](key: String)(implicit decoder: Decoder[T]): Future[Option[T]]
 
   def deleteFromCache(key: String): Future[Long]
 
@@ -32,38 +27,18 @@ trait CachingService {
 class CachingServiceImpl(host: String = "127.0.0.1", port: Int = 6379)(implicit
   executionContext: ExecutionContext,
   implicit val actorSystem: ActorSystem)
-    extends CachingService {
-
-  implicit val TimestampFormat: Encoder[Timestamp] with Decoder[Timestamp] = new Encoder[Timestamp] with Decoder[Timestamp] {
-    override def apply(a: Timestamp): Json = Encoder.encodeLong.apply(a.getTime)
-
-    override def apply(c: HCursor): Result[Timestamp] = Decoder.decodeLong.map(s => new Timestamp(s)).apply(c)
-  }
+    extends CachingService with CirceCommonCodecs {
 
   val redis = RedisClient(host = host, port = port)
 
-  override def addToCache(key: String, obj: Movie): Future[Boolean] = redis.set(key, obj.asJson.noSpaces)
+  override def addToCache[T](key: String, obj: T)(implicit encoder: Encoder[T]): Future[Boolean] = redis.set(key, obj.asJson.noSpaces)
 
-  override def getFromCache(key: String): Future[Movie] = {
+  override def getFromCache[T](key: String)(implicit decoder: Decoder[T]): Future[Option[T]] = {
     redis.get(key).map(maybeString => maybeString.get.utf8String).map(rawJson => {
 
-      val decoded: Either[Error, Movie] = decode[Movie](rawJson)
+      val decoded: Either[Error, T] = decode[T](rawJson)
       decoded match {
-        case Right(m) => m
-        case Left(_) => null
-      }
-    })
-  }
-
-  //TODO: Remove or make them generic
-  override def addReservationToCache(key: String, obj: ReservationCounter): Future[Boolean] = redis.set(key, obj.asJson.noSpaces)
-
-  override def getReservationStateFromCache(key: String): Future[Option[ReservationCounter]] = {
-    redis.get(key).map(maybeString => maybeString.get.utf8String).map(rawJson => {
-
-      val decoded: Either[Error, ReservationCounter] = decode[ReservationCounter](rawJson)
-      decoded match {
-        case Right(m) => Option(m)
+        case Right(m) => Some(m)
         case Left(_) => None
       }
     })

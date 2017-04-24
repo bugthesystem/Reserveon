@@ -31,6 +31,8 @@ class MoviesServiceImpl(
   import cacheService._
   import databaseService._
   import databaseService.driver.api._
+  import models.ModelCodecs.movie._
+  import models.ModelCodecs.reservationCounter._
 
   override def getMovies(): Future[Seq[Movie]] = db.run(movies.result)
 
@@ -45,7 +47,7 @@ class MoviesServiceImpl(
 
     //TODO: await Future.sequence, i.e Task.WhenAll
     val created = Await.result(db.run(movies returning movies += movie), 1 seconds)
-    Await.result(addReservationToCache(key, reservation), 1 seconds)
+    Await.result(addToCache[ReservationCounter](key, reservation)(encodeReservationCounter), 1 seconds)
 
     if (created.id.isEmpty) Future(None) else Future(Some(created))
   }

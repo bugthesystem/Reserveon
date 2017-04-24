@@ -10,6 +10,8 @@ import utils.CacheConstants
 
 import scala.concurrent.Future
 
+import models.ModelCodecs.reservationCounter._
+
 class ReservationRouteSpec extends SpecBase with TestFixture
     with CacheConstants with utils.Messages.Reservation with BeforeAndAfterEach {
 
@@ -36,14 +38,14 @@ class ReservationRouteSpec extends SpecBase with TestFixture
       cacheService.existsInCache(cacheKey) returns Future(true)
 
       val state = ReservationCounter(availableSeats = 1, reservedSeats = 0)
-      cacheService.getReservationStateFromCache(cacheKey) returns Future(Some(state))
+      cacheService.getFromCache[ReservationCounter](cacheKey)(decodeReservationCounter) returns Future(Some(state))
 
       //INFO:
       // I expected that I can check argument as following but it I could not see solution like this
       // it[ReservationState].is(rs=> rs.reservedSeats == 1)
 
       val expectedReservationState = ReservationCounter(state.availableSeats, state.reservedSeats + 1)
-      cacheService.addReservationToCache(cacheKey, expectedReservationState) returns Future(true)
+      cacheService.addToCache[ReservationCounter](cacheKey, expectedReservationState)(encodeReservationCounter) returns Future(true)
 
       val reservationCreateRequest = ByteString(
         s"""{
@@ -71,7 +73,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
       cacheService.existsInCache(cacheKey) returns Future(true)
 
       val state = ReservationCounter(availableSeats = 1, reservedSeats = 1)
-      cacheService.getReservationStateFromCache(cacheKey) returns Future(Some(state))
+      cacheService.getFromCache[ReservationCounter](cacheKey)(decodeReservationCounter) returns Future(Some(state))
 
       val reservationCreateRequest = ByteString(
         s"""{
@@ -125,7 +127,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
       val cacheKey = RESERVATION_TRACK_KEY_TPL.format(testImdbId, testScreenId)
       cacheService.existsInCache(cacheKey) returns Future(true)
 
-      cacheService.getReservationStateFromCache(cacheKey) returns Future(None)
+      cacheService.getFromCache[ReservationCounter](cacheKey)(decodeReservationCounter) returns Future(None)
 
       val reservationCreateRequest = ByteString(
         s"""{
@@ -154,7 +156,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
         testScreenId, state.availableSeats, state.reservedSeats)
 
       moviesService.findMovieByImdbId(testImdbId) returns Future(Some(movie))
-      cacheService.getReservationStateFromCache(cacheKey) returns Future(Some(state))
+      cacheService.getFromCache[ReservationCounter](cacheKey)(decodeReservationCounter) returns Future(Some(state))
       reservationService.getReservationDetail(testImdbId, testScreenId) returns Future(Some(detail))
 
       val authHeader = Authorization(OAuth2BearerToken("valid token"))

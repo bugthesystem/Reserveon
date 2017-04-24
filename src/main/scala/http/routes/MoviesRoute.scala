@@ -11,9 +11,10 @@ import http.auth.OAuth2RouteProvider
 import io.circe.Decoder.Result
 import io.circe.generic.auto._
 import io.circe.syntax._
-import io.circe.{Decoder, Encoder, HCursor, Json}
-import models.{Account, MovieCreate}
+import io.circe.{ Decoder, Encoder, HCursor, Json }
+import models.{ Account, MovieCreate }
 import services.MoviesService
+import utils.CirceCommonCodecs
 
 import scala.concurrent.ExecutionContext
 import scala.language.postfixOps
@@ -21,15 +22,9 @@ import scalaoauth2.provider.AuthInfo
 
 class MoviesRoute(override val oauth2DataHandler: OAuth2DataHandler, moviesService: MoviesService)(implicit executionContext: ExecutionContext)
     extends OAuth2RouteProvider[Account]
-    with FailFastCirceSupport {
+    with FailFastCirceSupport with CirceCommonCodecs {
 
   import moviesService._
-
-  implicit val TimestampFormat: Encoder[Timestamp] with Decoder[Timestamp] = new Encoder[Timestamp] with Decoder[Timestamp] {
-    override def apply(a: Timestamp): Json = Encoder.encodeLong.apply(a.getTime)
-
-    override def apply(c: HCursor): Result[Timestamp] = Decoder.decodeLong.map(s => new Timestamp(s)).apply(c)
-  }
 
   val route: Route = pathPrefix("movies") {
     pathEndOrSingleSlash {

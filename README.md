@@ -97,10 +97,11 @@ sbt clean coverage test
 sbt coverageReport
 ```
 
-## Improvements
+## Improvements / TODO
  - Store security tokens in cache (e.g redis) to decrease load on DB
  - Produce better error/validation messages from API
  - API Documentation using swagger or similar tool/lib
+ - Persist reservation data to DB to use for reports etc later on (currently stored in Redis)
  - Serve data as paged and use cache (implement cache invalidation etc)
  - Integration Testing
    1. DB integration tests using [`embedded postgres`](https://github.com/yandex-qatools/postgresql-embedded) or similar tool/lib

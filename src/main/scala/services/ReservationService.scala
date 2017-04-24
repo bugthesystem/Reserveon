@@ -1,6 +1,6 @@
 package services
 
-import models.{ ReservationCreate, ReservationCreateResult, MovieReservationDetail }
+import models.{ MovieReservationDetail, ReservationCounter, ReservationCreate, ReservationCreateResult }
 import utils.CacheConstants
 
 import scala.concurrent.duration._
@@ -20,6 +20,7 @@ class ReservationServiceImpl(
     extends ReservationService with CacheConstants with utils.Messages.Reservation {
 
   import cacheService._
+  import models.ModelCodecs.reservationCounter._
   import moviesService._
 
   override def createReservation(reservation: ReservationCreate): Future[ReservationCreateResult] = {
@@ -31,13 +32,13 @@ class ReservationServiceImpl(
         ReservationCreateResult(message = RESERVATION_CREATE_NO_AVAILABLE_MOVIE, success = false)
       }
     } else {
-      getReservationStateFromCache(key).map {
+      getFromCache[ReservationCounter](key)(decodeReservationCounter).map {
         case Some(cachedReservation) => {
           if (cachedReservation.availableSeats > cachedReservation.reservedSeats) {
             cachedReservation.reserve(1)
             ReservationCreateResult(
               message = RESERVATION_CREATED,
-              success = Await.result(addReservationToCache(key, cachedReservation), 1 seconds)
+              success = Await.result(addToCache[ReservationCounter](key, cachedReservation)(encodeReservationCounter), 1 seconds)
             )
           } else {
             ReservationCreateResult(message = RESERVATION_CREATE_NO_AVAILABLE_SEAT, success = false)
@@ -56,7 +57,7 @@ class ReservationServiceImpl(
       case Some(movie) => {
         val key = RESERVATION_TRACK_KEY_TPL.format(imdbId, screenId)
 
-        val cachedReservationOption = Await.result(getReservationStateFromCache(key), 1 seconds)
+        val cachedReservationOption = Await.result(getFromCache[ReservationCounter](key)(decodeReservationCounter), 1 seconds)
 
         cachedReservationOption match {
           case Some(c) => {
