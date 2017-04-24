@@ -4,7 +4,7 @@ Reserveon
 Sample reservation system application
 
 ## Tech stack
- - Scala
+ - [Scala](https://www.scala-lang.org/)
  - [Akka Http](https://github.com/akka/akka-http)
  - [Slick](https://github.com/slick/slick)
  - [Flayway](https://github.com/flyway/flyway) (for schema migration)
