@@ -51,7 +51,7 @@ class OAuth2DataHandler(
     request match {
       case request: PasswordRequest =>
         accountsService.authenticate(request.username, request.password)
-      case request: ClientCredentialsRequest =>
+      case _: ClientCredentialsRequest =>
         maybeCredential.fold(Future.failed[Option[Account]](new InvalidRequest())) { clientCredential =>
           for {
             maybeAccount <- oAuthClientsService.findClientCredentials(

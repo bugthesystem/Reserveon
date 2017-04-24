@@ -9,14 +9,15 @@ import scala.concurrent.{ ExecutionContext, Future }
 
 trait AccountsService {
 
-  def create(account: Account): Future[Account]
+  def createAccount(account: Account): Future[Account]
 
   def authenticate(email: String, password: String): Future[Option[Account]]
 
   def findAccountById(id: Long): Future[Option[Account]]
 }
 
-class AccountsServiceImpl(val databaseService: DatabaseService)(implicit executionContext: ExecutionContext) extends AccountsTable with AccountsService {
+class AccountsServiceImpl(val databaseService: DatabaseService)(implicit executionContext: ExecutionContext)
+    extends AccountsTable with AccountsService {
 
   import databaseService._
   import databaseService.driver.api._
@@ -29,7 +30,7 @@ class AccountsServiceImpl(val databaseService: DatabaseService)(implicit executi
     }
   }
 
-  override def create(account: Account): Future[Account] = db.run(accounts returning accounts += account)
+  override def createAccount(account: Account): Future[Account] = db.run(accounts returning accounts += account)
 
   override def authenticate(email: String, password: String): Future[Option[Account]] = {
     val hashedPassword = digestString(password)

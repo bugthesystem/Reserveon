@@ -15,7 +15,7 @@ sealed class SampleDataSeed(
 
   def run(): Unit = {
     for {
-      _ <- accountsService.create(
+      _ <- accountsService.createAccount(
         Account(Some(0), "test@reserveon.com", "9ee3bc4800194e65a7951662a4b69bdb", new Timestamp(new DateTime().getMillis))
       )
       _ <- oAuthClientsService.create(

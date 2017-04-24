@@ -102,6 +102,8 @@ sbt coverageReport
    1. DB integration tests using [`embedded postgres`](https://github.com/yandex-qatools/postgresql-embedded) or similar tool/lib
    2. Redis integration tests using [`embedded redis`](https://github.com/kstyrc/embedded-redis) or similar tool/lib
  - Use JWT authentication protocol with OAuth2 authentication framework
+ - Implement account CRUD operations (currently test user/s created with sample data on startup
+   if `DB_CREATE_SAMPLE_DATA` is `true`
 
 
 ziλasal.

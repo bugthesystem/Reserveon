@@ -3,7 +3,7 @@ package models.db
 import java.sql.Timestamp
 
 import models.Account
-import services.{ DatabaseService, DatabaseServiceImpl }
+import services.DatabaseService
 
 trait AccountsTable {
   protected val databaseService: DatabaseService
