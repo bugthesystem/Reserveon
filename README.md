@@ -25,7 +25,7 @@ Sample reactive Movie Ticket reservation system
 
 ## Commands
 ### Run
-:warning: _If you want to use docker-compose, you can skip manual steps._
+:warning: _If you want to use **`docker-compose`**, you can skip manual steps._
 
 #### Setup Postgres Database using Docker
 **Run Postgres container**  
