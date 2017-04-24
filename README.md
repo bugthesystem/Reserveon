@@ -1,7 +1,8 @@
 Reserveon
 =========
 
-Sample reactive Movie Ticket reservation system
+Sample reactive Movie Ticket reservation system  
+[![Build Status](https://travis-ci.org/ziyasal/Reserveon.svg?branch=master)](https://travis-ci.org/ziyasal/Reserveon)
 
 ## Tech stack
  - [Scala](https://www.scala-lang.org/)
