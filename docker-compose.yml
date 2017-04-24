@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  api:
+    image: digitalgenius/alpine-scala-sbt
+    hostname: api
+    depends_on:
+      - db
+      - redis
+    environment:
+      - DB_PG_URL=jdbc:postgresql://db:5432/postgres
+      - DB_PG_USER=postgres
+      - DB_PG_PWD=s3cret
+      - DB_CREATE_SAMPLE_DATA=true
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    expose:
+      - "9001"
+    ports:
+      - "127.0.0.1:9001:9001"
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    command: sbt run
+
+  db:
+    image: postgres:9.6.2-alpine
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /var/run/postgresql
+    volumes:
+      - db:/var/lib/postgresql/data
+    ports:
+      - "65432:5432"
+
+  redis:
+    image: redis:3.2.8-alpine
+    read_only: true
+    volumes:
+      - redis:/data
+    user: redis
+    ports:
+      - "127.0.0.1:6379:6379"
+
+volumes:
+  db:
+  redis:

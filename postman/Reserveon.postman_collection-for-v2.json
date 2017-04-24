@@ -1,0 +1,159 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Reserveon",
+		"_postman_id": "3598dcaa-93d6-9d41-5b19-dd43bb28e8ab",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:9001/v1/movies",
+			"request": {
+				"url": "http://localhost:9001/v1/movies",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer e44YL9zyvb5H3mWNQhw2H4c3j9RHNzyHbCKBFirs",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/oauth/access_token",
+			"request": {
+				"url": "http://localhost:9001/oauth/access_token",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "client_id",
+							"value": "test_client_id",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "client_secret",
+							"value": "test_client_secret",
+							"type": "text",
+							"enabled": true
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text",
+							"enabled": true
+						}
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/v1/movies/{id}",
+			"request": {
+				"url": "http://localhost:9001/v1/movies/2",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer e44YL9zyvb5H3mWNQhw2H4c3j9RHNzyHbCKBFirs",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/v1/movies",
+			"request": {
+				"url": "http://localhost:9001/v1/movies",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer e44YL9zyvb5H3mWNQhw2H4c3j9RHNzyHbCKBFirs",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n  \"imdbId\": \"tt666_XYZ\",\n  \"movieTitle\": \"DemonXYZ\",\n  \"availableSeats\": 100,\n  \"screenId\": \"screen_666XYZ\"\n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/v1/reservation/",
+			"request": {
+				"url": "http://localhost:9001/v1/reservation",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer e44YL9zyvb5H3mWNQhw2H4c3j9RHNzyHbCKBFirs",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n  \"imdbId\": \"tt666_XYZ\",\n  \"screenId\": \"screen_666XYZ\"\n }"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/v1/reservation/{get details}",
+			"request": {
+				"url": "http://localhost:9001/v1/reservation/?imdbId=tt666_XYZ&screenId=screen_666XYZ",
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer e44YL9zyvb5H3mWNQhw2H4c3j9RHNzyHbCKBFirs",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n  \"imdbId\": \"tt666\",\n  \"screenId\": \"screen_666\"\n }"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
