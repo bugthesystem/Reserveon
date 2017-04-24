@@ -41,7 +41,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
       cacheService.getFromCache[ReservationCounter](cacheKey)(decodeReservationCounter) returns Future(Some(state))
 
       //INFO:
-      // I expected that I can check argument as following but it I could not see solution like this
+      // I expected that I can check argument as following but, I could not see solution like this
       // it[ReservationState].is(rs=> rs.reservedSeats == 1)
 
       val expectedReservationState = ReservationCounter(state.availableSeats, state.reservedSeats + 1)
