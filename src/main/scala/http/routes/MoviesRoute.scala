@@ -8,7 +8,7 @@ import handlers.OAuth2DataHandler
 import http.auth.OAuth2RouteProvider
 import io.circe.generic.auto._
 import io.circe.syntax._
-import models.{Account, MovieCreate}
+import models.{ Account, MovieCreate }
 import services.MoviesService
 import utils.CirceCommonCodecs
 

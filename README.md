@@ -29,18 +29,13 @@ Sample reactive Movie Ticket reservation system
 
 #### Setup Postgres Database using Docker
 **Run Postgres container**  
+_It will create database and user_
 ```sh
-export DB_PG_PWD=s3cret
-docker run --name pg-reserveon -e POSTGRES_PASSWORD=$DB_PG_PWD -p 65432:5432 -v /var/lib/postgresql/data -d postgres
-```
-**Connect to postgres:**  
-```sh
-docker run -it --link pg-reserveon:postgres --rm postgres \ 
-sh -c 'exec psql -h "$POSTGRES_PORT_5432_TCP_ADDR" -p "$POSTGRES_PORT_5432_TCP_PORT" -U postgres'
-```
-**Create Database**  
-```sh
-CREATE DATABASE "reserveon";
+docker run --name pg-reserveon -itd --restart always \
+  --publish 65432:5432 \
+  --env 'PG_PASSWORD=passw0rd' \
+  --env 'DB_USER=reserveonUser' --env 'DB_PASS=s3cret'  --env 'DB_NAME=reserveon' \
+  sameersbn/postgresql:9.6-2
 ```
 
 #### Setup Redis using Docker
@@ -60,7 +55,7 @@ docker run --name redis-reserveon -d -p 6379:6379 redis
 **_Sample run command_**
 ```sh
 DB_PG_URL=jdbc:postgresql://localhost:65432/reserveon \
-DB_PG_USER=postgres \
+DB_PG_USER=reserveonUser \
 DB_PG_PWD=s3cret \
 DB_CREATE_SAMPLE_DATA=true \
 REDIS_HOST=localhost \

@@ -8,8 +8,8 @@ services:
       - db
       - redis
     environment:
-      - DB_PG_URL=jdbc:postgresql://db:5432/postgres
-      - DB_PG_USER=postgres
+      - DB_PG_URL=jdbc:postgresql://db:5432/reserveon
+      - DB_PG_USER=reserveonUser
       - DB_PG_PWD=s3cret
       - DB_CREATE_SAMPLE_DATA=true
       - REDIS_HOST=redis
@@ -24,15 +24,18 @@ services:
     command: sbt run
 
   db:
-    image: postgres:9.6.2-alpine
-    read_only: true
-    tmpfs:
-      - /tmp
-      - /var/run/postgresql
+    image: sameersbn/postgresql:9.6-2
+    restart: always
     volumes:
-      - db:/var/lib/postgresql/data
+      - db:/var/lib/postgresql
     ports:
       - "65432:5432"
+    environment:
+      - DB_NAME=reserveon
+      - DB_USER=reserveonUser
+      - DB_PASS=s3cret
+      - PG_PASSWORD=passw0rd
+      - PG_SSL=off
 
   redis:
     image: redis:3.2.8-alpine
