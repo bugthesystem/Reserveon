@@ -63,6 +63,16 @@ REDIS_PORT=6379
 sbt run
 ```
 
+**_Sample run command using docker `link` to `posgtres` and `redis` using local application image_**
+```sh
+docker run --name api \
+-e DB_USER=reserveonUser -e DB_PASSWORD=s3cret \
+-e DB_NAME=reserveon  -e DB_CREATE_SAMPLE_DATA=true \
+--link pg-reserveon:database \
+--link redis-reserveon:redis \
+-d -p 9001:9001 ziyasal/reserveon
+```
+
 **OR**
 
 Run `docker-compose`, it will start `api`, `redis` and `postgres` and will expose api port to host.  
