@@ -54,26 +54,29 @@ class ReservationServiceImpl(
 
   override def getReservationDetail(imdbId: String, screenId: String): Future[Option[MovieReservationDetail]] = {
     //INFO: Implement caching to hit to it first
-    findMovieByImdbId(imdbId).map {
-      case Some(movie) => {
-        val key = RESERVATION_TRACK_KEY_TPL.format(imdbId, screenId)
+    val key = RESERVATION_TRACK_KEY_TPL.format(imdbId, screenId)
 
-        val cachedReservationOption = Await.result(getFromCache[ReservationCounter](key)(decodeReservationCounter), 1 seconds)
-
-        cachedReservationOption match {
-          case Some(c) => {
-            Some(MovieReservationDetail(
-              imdbId = imdbId,
-              movieTitle = movie.movieTitle,
-              screenId = screenId,
-              availableSeats = c.availableSeats,
-              reservedSeats = c.reservedSeats
-            ))
+    for {
+      movieOption <- findMovieByImdbId(imdbId)
+      cachedReservationOption <- getFromCache[ReservationCounter](key)(decodeReservationCounter)
+    } yield {
+      movieOption match {
+        case Some(movie) => {
+          cachedReservationOption match {
+            case Some(cachedReservation) => {
+              Some(MovieReservationDetail(
+                imdbId = imdbId,
+                movieTitle = movie.movieTitle,
+                screenId = screenId,
+                availableSeats = cachedReservation.availableSeats,
+                reservedSeats = cachedReservation.reservedSeats
+              ))
+            }
+            case None => None
           }
-          case None => None
         }
+        case None => None
       }
-      case None => None
     }
   }
 }
