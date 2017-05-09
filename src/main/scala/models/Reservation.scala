@@ -6,7 +6,7 @@ case class ReservationCreate(imdbId: String, screenId: String) {
 }
 
 case class ReservationCounter(availableSeats: Int, var reservedSeats: Int) {
-  def reserve(count: Int): Unit = {
+  def makeReservation(count: Int = 1): Unit = {
     reservedSeats += count
   }
 }

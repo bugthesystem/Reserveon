@@ -35,7 +35,7 @@ class ReservationServiceImpl(
       getFromCache[ReservationCounter](key)(decodeReservationCounter).map {
         case Some(cachedReservation) => {
           if (cachedReservation.availableSeats > cachedReservation.reservedSeats) {
-            cachedReservation.reserve(1)
+            cachedReservation.makeReservation()
             ReservationCreateResult(
               message = RESERVATION_CREATED,
               success = Await.result(addToCache[ReservationCounter](key, cachedReservation)(encodeReservationCounter), 1 seconds)
