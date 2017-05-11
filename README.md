@@ -103,7 +103,7 @@ sbt coverageReport
 ```
 
 ## Improvements / TODO
- - Store security tokens in cache (e.g redis) to decrease load on DB
+ - Store refresh tokens in cache (e.g redis) to decrease load on DB
  - Produce better error/validation messages from API
  - API Documentation using swagger or similar tool/lib
  - Persist reservation data to DB to use for reports etc later on (currently stored in Redis)
