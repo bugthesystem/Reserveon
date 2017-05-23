@@ -3,8 +3,7 @@ package services
 import models.{ MovieReservationDetail, ReservationCounter, ReservationCreate, ReservationCreateResult }
 import utils.CacheConstants
 
-import scala.concurrent.duration._
-import scala.concurrent.{ Await, ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.postfixOps
 
 trait ReservationService {
@@ -23,33 +22,52 @@ class ReservationServiceImpl(
   import models.ModelCodecs.reservationCounter._
   import moviesService._
 
+  //TODO: Implement distributed lock mechanism
+  //TODO: https://redis.io/topics/distlock
+  def makeReservation(reservationOption: Option[ReservationCounter]): Future[(String, Boolean)] = {
+    reservationOption match {
+      case Some(value) => {
+
+        //ACQUIRE LOCK
+        if (value.availableSeats > value.reservedSeats) {
+          value.makeReservation()
+          Future {
+            (RESERVATION_CREATED, true)
+          }
+        } else {
+          Future {
+            (RESERVATION_CREATE_NO_AVAILABLE_SEAT, false)
+          }
+        }
+        //RELEASE LOCK
+
+      }
+      case None => Future {
+        (RESERVATION_CREATE_NO_AVAILABLE_MOVIE, false)
+      }
+    }
+  }
+
+  def retrieve(key: String): Future[ReservationCreateResult] = {
+    for {
+      cachedReservationOpt <- getFromCache[ReservationCounter](key)(decodeReservationCounter)
+      (message, ok) <- makeReservation(cachedReservationOpt)
+      added <- addToCache[ReservationCounter](key, cachedReservationOpt.get)(encodeReservationCounter)
+    } yield ReservationCreateResult(message = message, success = added & ok)
+  }
+
   override def createReservation(reservation: ReservationCreate): Future[ReservationCreateResult] = {
 
     val key = RESERVATION_TRACK_KEY_TPL.format(reservation.imdbId, reservation.screenId)
-    val exists = Await.result(existsInCache(key), 1 seconds)
-    if (!exists) {
-      Future {
-        ReservationCreateResult(message = RESERVATION_CREATE_NO_AVAILABLE_MOVIE, success = false)
-      }
-    } else {
-      getFromCache[ReservationCounter](key)(decodeReservationCounter).map {
-        case Some(cachedReservation) => {
-          if (cachedReservation.availableSeats > cachedReservation.reservedSeats) {
-            cachedReservation.makeReservation()
-            ReservationCreateResult(
-              message = RESERVATION_CREATED,
-              success = Await.result(addToCache[ReservationCounter](key, cachedReservation)(encodeReservationCounter), 1 seconds)
-            )
-          } else {
-            ReservationCreateResult(message = RESERVATION_CREATE_NO_AVAILABLE_SEAT, success = false)
-          }
-        }
-        case None => ReservationCreateResult(
-          message = RESERVATION_CREATE_NO_AVAILABLE_MOVIE,
-          success = false
-        )
-      }
+
+    val message = Future {
+      ReservationCreateResult(message = RESERVATION_CREATE_NO_AVAILABLE_MOVIE, success = false)
     }
+
+    for {
+      exists: Boolean <- existsInCache(key)
+      result <- if (exists) message else retrieve(key)
+    } yield result
   }
 
   override def getReservationDetail(imdbId: String, screenId: String): Future[Option[MovieReservationDetail]] = {
