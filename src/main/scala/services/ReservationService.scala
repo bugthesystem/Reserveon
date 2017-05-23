@@ -7,7 +7,7 @@ import scala.concurrent.{ ExecutionContext, Future }
 import scala.language.postfixOps
 
 trait ReservationService {
-  def createReservation(reservation: ReservationCreate): Future[ReservationCreateResult]
+  def makeReservation(reservation: ReservationCreate): Future[ReservationCreateResult]
 
   def getReservationDetail(imdbId: String, screenId: String): Future[Option[MovieReservationDetail]]
 }
@@ -48,7 +48,7 @@ class ReservationServiceImpl(
     }
   }
 
-  def retrieve(key: String): Future[ReservationCreateResult] = {
+  def processReservation(key: String): Future[ReservationCreateResult] = {
     for {
       cachedReservationOpt <- getFromCache[ReservationCounter](key)(decodeReservationCounter)
       (message, ok) <- makeReservation(cachedReservationOpt)
@@ -56,7 +56,7 @@ class ReservationServiceImpl(
     } yield ReservationCreateResult(message = message, success = added & ok)
   }
 
-  override def createReservation(reservation: ReservationCreate): Future[ReservationCreateResult] = {
+  override def makeReservation(reservation: ReservationCreate): Future[ReservationCreateResult] = {
 
     val key = RESERVATION_TRACK_KEY_TPL.format(reservation.imdbId, reservation.screenId)
 
@@ -66,7 +66,7 @@ class ReservationServiceImpl(
 
     for {
       exists: Boolean <- existsInCache(key)
-      result <- if (exists) message else retrieve(key)
+      result <- if (exists) message else processReservation(key)
     } yield result
   }
 

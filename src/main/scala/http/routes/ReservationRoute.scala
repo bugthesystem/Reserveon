@@ -31,7 +31,7 @@ class ReservationRoute(
         authenticateOAuth2Async[AuthInfo[Account]]("realm", oauth2Authenticator) {
           _ =>
             entity(as[ReservationCreate]) { reservation =>
-              onSuccess(createReservation(reservation)) {
+              onSuccess(makeReservation(reservation)) {
                 result =>
                   {
                     if (result.success) {

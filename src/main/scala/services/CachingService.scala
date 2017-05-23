@@ -1,9 +1,6 @@
 package services
 
-import java.sql.Timestamp
-
 import akka.actor.ActorSystem
-import io.circe.Decoder.Result
 import io.circe._
 import io.circe.generic.auto._
 import io.circe.parser._

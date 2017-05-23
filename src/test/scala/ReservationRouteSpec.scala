@@ -32,7 +32,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
     "create reservation" in {
       val result = ReservationCreateResult(message = RESERVATION_CREATED, success = true)
 
-      reservationService.createReservation(reservationToCreate) returns Future(result)
+      reservationService.makeReservation(reservationToCreate) returns Future(result)
 
       val cacheKey = RESERVATION_TRACK_KEY_TPL.format(testImdbId, testScreenId)
       cacheService.existsInCache(cacheKey) returns Future(true)
@@ -67,7 +67,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
     "fail create reservation when there is no available seat" in {
       val result = ReservationCreateResult(message = RESERVATION_CREATE_NO_AVAILABLE_SEAT, success = false)
 
-      reservationService.createReservation(reservationToCreate) returns Future(result)
+      reservationService.makeReservation(reservationToCreate) returns Future(result)
 
       val cacheKey = RESERVATION_TRACK_KEY_TPL.format(testImdbId, testScreenId)
       cacheService.existsInCache(cacheKey) returns Future(true)
@@ -96,7 +96,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
     "fail create reservation when there is no valid movie entry" in {
       val result = ReservationCreateResult(message = RESERVATION_CREATE_NO_AVAILABLE_MOVIE, success = false)
 
-      reservationService.createReservation(reservationToCreate) returns Future(result)
+      reservationService.makeReservation(reservationToCreate) returns Future(result)
 
       val cacheKey = RESERVATION_TRACK_KEY_TPL.format(testImdbId, testScreenId)
       cacheService.existsInCache(cacheKey) returns Future(false)
@@ -122,7 +122,7 @@ class ReservationRouteSpec extends SpecBase with TestFixture
     "fail create reservation when there is no valid movie (cache expire right after exists check) entry" in {
       val result = ReservationCreateResult(message = RESERVATION_CREATE_NO_AVAILABLE_MOVIE, success = false)
 
-      reservationService.createReservation(reservationToCreate) returns Future(result)
+      reservationService.makeReservation(reservationToCreate) returns Future(result)
 
       val cacheKey = RESERVATION_TRACK_KEY_TPL.format(testImdbId, testScreenId)
       cacheService.existsInCache(cacheKey) returns Future(true)
