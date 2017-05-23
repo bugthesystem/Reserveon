@@ -8,6 +8,7 @@ Sample reactive Movie Ticket reservation system
  - [Scala](https://www.scala-lang.org/)
  - [Akka Http](https://github.com/akka/akka-http)
  - [Slick](https://github.com/slick/slick)
+ - [Circe](https://github.com/circe/circe)
  - [Flayway](https://github.com/flyway/flyway) (for schema migration)
  - [Postgres](https://github.com/postgres/postgres)
  - [Redis](https://github.com/antirez/redis)
