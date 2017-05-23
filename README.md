@@ -103,16 +103,18 @@ sbt coverageReport
 ```
 
 ## Improvements / TODO
- - Store security tokens in cache (e.g redis) to decrease load on DB
+ - Store refresh tokens in cache (e.g redis) to decrease load on DB
  - Produce better error/validation messages from API
  - API Documentation using swagger or similar tool/lib
  - Persist reservation data to DB to use for reports etc later on (currently stored in Redis)
  - Serve data as paged and implement data caching (implement cache invalidation etc)
+ - Implement distributed locking mechanism for reservations
  - Integration Testing
    1. DB integration tests using [`embedded postgres`](https://github.com/yandex-qatools/postgresql-embedded) or similar tool/lib
    2. Redis integration tests using [`embedded redis`](https://github.com/kstyrc/embedded-redis) or similar tool/lib
  - Use JWT authentication protocol with OAuth2 authentication framework
  - Implement account CRUD routes (logic currently implemented and 
-    sample data seed uses it to create test user/s on startup if `DB_CREATE_SAMPLE_DATA` is `true`
+    sample data seed uses it to create test user/s on startup if `DB_CREATE_SAMPLE_DATA` is `true`\
+ - (Forgotten stuff) Refactor [ReservationService.createReservation](https://github.com/ziyasal/Reserveon/blob/master/src/main/scala/services/ReservationService.scala#L26) method to work async instead of awaiting result of future 
 
 ziλasal.
