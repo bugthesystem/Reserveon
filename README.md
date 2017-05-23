@@ -114,7 +114,7 @@ sbt coverageReport
    2. Redis integration tests using [`embedded redis`](https://github.com/kstyrc/embedded-redis) or similar tool/lib
  - Use JWT authentication protocol with OAuth2 authentication framework
  - Implement account CRUD routes (logic currently implemented and 
-    sample data seed uses it to create test user/s on startup if `DB_CREATE_SAMPLE_DATA` is `true`\
+    sample data seed uses it to create test user/s on startup if `DB_CREATE_SAMPLE_DATA` is `true`
  - _~~(Forgotten stuff) Refactor [ReservationService.createReservation](https://github.com/ziyasal/Reserveon/blob/master/src/main/scala/services/ReservationService.scala#L26) method to work async instead of awaiting result of future~~_
 
 ziλasal.
