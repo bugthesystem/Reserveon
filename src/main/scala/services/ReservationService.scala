@@ -22,8 +22,8 @@ class ReservationServiceImpl(
   import models.ModelCodecs.reservationCounter._
   import moviesService._
 
-  //TODO: Implement distributed lock mechanism
-  //TODO: https://redis.io/topics/distlock
+  //TODO: Implement distributed lock mechanism (redis, zookeeper etc..)
+  //INFO: https://redis.io/topics/distlock
   def makeReservation(reservationOption: Option[ReservationCounter]): Future[(String, Boolean)] = {
     reservationOption match {
       case Some(value) => {
