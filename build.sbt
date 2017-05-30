@@ -45,7 +45,7 @@ libraryDependencies ++= {
 lazy val commonSettings = Seq(
   version := "0.1-SNAPSHOT",
   organization := "com.reserveon",
-  scalaVersion := "2.10.1",
+  scalaVersion := "2.12.1",
   test in assembly := {}
 )
 
