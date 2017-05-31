@@ -109,7 +109,7 @@ sbt coverageReport
  - API Documentation using swagger or similar tool/lib
  - Persist reservation data to DB to use for reports etc later on (currently stored in Redis)
  - Serve data as paged and implement data caching (implement cache invalidation etc)
- - Implement distributed locking mechanism for reservations
+ - Implement distributed locking mechanism for reservations (zookeeper, redis, custom etc)
  - Integration Testing
    1. DB integration tests using [`embedded postgres`](https://github.com/yandex-qatools/postgresql-embedded) or similar tool/lib
    2. Redis integration tests using [`embedded redis`](https://github.com/kstyrc/embedded-redis) or similar tool/lib
